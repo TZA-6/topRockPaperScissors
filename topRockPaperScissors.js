@@ -1,3 +1,4 @@
+
 //Function to simulate game of Rock Paper Scissors
 function computerPlay(){
     //return variables
@@ -21,9 +22,9 @@ function computerPlay(){
 
 //Function to play a round of Rock Paper Scissors
 function playRound(playerSelect, compterSeleciton){
-    let draw = "Draw! Try again!"
-    let win = "You win!"
-    let lose = "You Lose! Please try again"
+    let draw = "draw";
+    let win = "win";
+    let lose = "lose";
 
     
     switch(playerSelect.toLowerCase()){
@@ -87,53 +88,78 @@ function playRound(playerSelect, compterSeleciton){
 
 }
 
-//Function that asks user to for input and plays a best of 5
-function game(){
-    //win totals
-    let playerWins = 0;
-    let cpuWins = 0;
-    let outcome;
-    let final;
-    let userInput;
+//What to execute when user clicks on a button
+function logSelection(e){
 
-    //playRound return statements
-    let draw = "Draw! Try again!"
-    let win = "You win!"
-    let lose = "You Lose! Please try again"
+    //gameInfo
+    const gameInfo = document.querySelector(".gameInfo");
+    const gameInfoText = document.createElement("p");
+    gameInfoText.classList.add("gameInfoText");
 
-    //play 5 games against computer and update wins
-    for(let i = 0; i < 5; i++){
-        userInput = window.prompt("Pick rock, paper, or scissors", "")
-        outcome = playRound(userInput.toLowerCase(), computerPlay());
-        switch(outcome){
-            case win:
-                playerWins++;
-                break;
-            case lose:
-                cpuWins++;
-                break;
-            case draw:
-                break;
-            default:
-                return "game default"
-                break;
-        }
-    }
+
+    const score = document.querySelector(".score");
+    const scoreText = document.createElement("p");
+
+    const final = document.querySelector(".final");
+    const finalText = document.createElement("p");
+    final.appendChild(finalText);
     
-    //update final based on cpu and player wins
-    if(playerWins > cpuWins){
-        final = "player wins";
-    }else if(cpuWins > playerWins){
-        final = "cpu wins";
+    //Simulate game
+    let playerSelection = this.id;
+    let computerSelection = computerPlay();
+    let result = playRound(playerSelection, computerSelection);
+
+    //based on result... execute
+    if(result == "win"){
+        playerWins++;
+        gameNumber++;
+        gameInfoText.textContent = "GAME WON";
+    }else if(result == "lose"){
+        cpuWins++;
+        gameNumber++;
+        gameInfoText.textContent = "GAME LOSS";
     }else{
-        final = "draw";
+        gameInfoText.textContent = "GAME DRAW";
+        console.log(result);
     }
-    
-    return final;
+    //update gameInfo
+    let child = gameInfo.lastElementChild;
+    if(child){
+        gameInfo.removeChild(child);
+    }
+    gameInfo.appendChild(gameInfoText);
+
+    console.log(playerWins);
+    console.log(cpuWins);
+
+    //show and update score
+    child = score.lastElementChild;
+    if(child){
+        score.removeChild(child);
+    }
+    scoreText.textContent = playerWins + " - " + cpuWins
+    score.appendChild(scoreText);
+
+    //Display best of 5 final
+    if(playerWins === 5){
+        finalText.textContent = "You won the series!";
+        console.log(finalText);
+        final.appendChild(finalText);
+    }else if(cpuWins === 5){
+        finalText.textContent = "The cpu won the series";
+        final.appendChild(finalText);
+    }
+}
+function updateResults(playerWins, cpuWins){
 
 }
 
 //--------------------------------------------------
-let player = "Rock";
-let computer = computerPlay();
-console.log(game());
+//When a button is clicked, run logSelection function
+let playerWins = 0;
+let cpuWins = 0;
+let gameNumber = 0;
+const buttons = document.querySelectorAll("button");
+buttons.forEach((button) => {
+    button.addEventListener("click", logSelection);
+});
